@@ -1,0 +1,48 @@
+name: allobrain
+version: '3.8'
+
+services:
+  ui:
+    build: 
+      context: ./ui
+      dockerfile: Dockerfile
+    container_name: ui
+    ports:
+      - "8080:80"
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - db
+      - api
+
+  db:
+    image: postgres:13
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 0tJXCokSvOB8
+      POSTGRES_DB: notes
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  
+  api:
+    container_name: api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: 0tJXCokSvOB8
+      DB_NAME: notes
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
