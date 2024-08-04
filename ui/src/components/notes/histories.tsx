@@ -17,6 +17,7 @@ import { format } from "date-fns";
 import { Note, NoteVersion } from "@/components/notes/types.ts";
 import ReactDiffViewer from 'react-diff-viewer-continued';
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { cn } from "@/lib/utils";
 
 interface HistoryProps {
   note: Note,
@@ -56,7 +57,7 @@ export default function Histories({note, onChanged}: HistoryProps) {
       const prevVersion = versions[idx + 1];
 
       const oldValue =
-        `
+`
 title: 
 ${ prevVersion?.title || '' }
 
@@ -65,7 +66,7 @@ ${ prevVersion?.content || '' }
 `;
 
       const newValue =
-        `
+`
 title: 
 ${ selectedVersion.title }
 
@@ -121,7 +122,9 @@ ${ selectedVersion.content }
         <div className="flex items-center gap-2">
           <ul className="p-2 border-r border-gray-300" style={ {width: "250px"} }>
             { versions.map((version, index) =>
-              <li className="flex justify-start items-center gap-2 pb-2" key={ index }
+              <li className={cn('flex justify-center pt-2  items-center gap-2 pb-2 rounded-sm', {
+                'bg-slate-200': version.id === selectedVersion.id,
+              })} key={ index }
                   onClick={ () => setSelectedVersion(version) }>
                 <div className="cursor-pointer">{ format(new Date(version.created_at), "yyyy-MM-dd HH:mm") }</div>
                 <Undo2 className="cursor-pointer h-4 w-4" onClick={ () => setNoteToVersion(version) }/>
